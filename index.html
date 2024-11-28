@@ -339,6 +339,19 @@
                 console.error("Error updating vacancy:", error)
               );
           },
+          removeItem(index) {
+            const item = this.cart[index];
+
+            this.cart.splice(index, 1);
+
+            const activityToUpdate = this.activities.find(
+              (activity) => activity._id === item._id
+            );
+
+            if (this.cart.length === 0) {
+              this.showProduct = true;
+            }
+          },
           validateName(field) {
             const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
             this.validations[`${field}Valid`] = nameRegex.test(
