@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mount Up</title>
+    <link rel="icon" href="images/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <script src="activities.js"></script>
+    <script
+      src="https://kit.fontawesome.com/5aaf1e8901.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="App">
+      <div id="header">
+        <img v-bind:src="mountUpLogo" id="mountUpLogo" />
+        <h1 v-text="title"></h1>
+      </div>
+      <div id="main">
+        <div id="sidebar" v-if="showProduct">
+          <h1>Sort By</h1>
+          <label>
+            <input
+              type="radio"
+              name="sortOption"
+              v-model="sortField"
+              value="name"
+            />
+            Name
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="sortOption"
+              v-model="sortField"
+              value="location"
+            />
+            Location
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="sortOption"
+              v-model="sortField"
+              value="price"
+            />
+            Price
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="sortOption"
+              v-model="sortField"
+              value="vacancy"
+            />
+            Vacancy
+          </label>
+          <h2>Order</h2>
+          <label>
+            <input
+              type="radio"
+              name="sortOrder"
+              v-model="sortOrder"
+              value="ascending"
+            />
+            Ascending
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="sortOrder"
+              v-model="sortOrder"
+              value="descending"
+            />
+            Descending
+          </label>
+          <h2>Search</h2>
+        </div>
+        <div id="content" v-if="showProduct">
+          <div id="flex1">
+            <h1>Actvities</h1>
+            <button
+              id="checkoutBtn"
+              v-if="canCheckout"
+              v-on:click="showCheckout"
+            >
+              Cart {{ cartItemCount }}
+            </button>
+          </div>
+          <div id="activities">
+            <div
+              id="activity"
+              class="activity"
+              v-for="activity in sortedActivities"
+              :key="activity._id"
+            >
+              <h2 v-text="activity.name"></h2>
+              <img v-bind:src="activity.image" id="activityImage" />
+              <strong>Description: </strong>
+              <span v-text="activity.description" id="italic"></span>
+              <p><strong>Location: </strong>{{activity.location}}</p>
+              <p><strong>Price: </strong>{{activity.price}} AED per month.</p>
+              <p>
+                <!-- now instead of this change it using put ok? -->
+                <strong>Spots Left: </strong>{{activity.vacancy}}
+              </p>
+              <div>
+                <span v-for="n in activity.rating">★</span>
+                <span v-for="n in 5-activity.rating">☆</span>
+              </div>
+              <button
+                v-on:click="addToCart(activity)"
+                v-if="canAddToCart(activity)"
+              >
+                Add to Cart <i class="fa-solid fa-cart-shopping"></i>
+              </button>
+              <span v-else>All Out!</span>
+            </div>
+          </div>
+        </div>
+        <div v-else id="checkoutPage">
+          <div id="flex1">
+            <h1>Checkout</h1>
+            <button id="backToShopBtn" v-on:click="showCheckout">Back</button>
+          </div>
+          <p id="orderText">
+            <strong> First Name:</strong>
+            <input
+              v-model.trim="order.firstName"
+              id="input"
+              @input="validateName('firstName')"
+            />
+            <span v-if="!validations.firstNameValid" class="error">
+              First Name must contain only letters.
+            </span>
+          </p>
+          <p id="orderText">
+            <strong> Last Name:</strong>
+            <input
+              v-model.trim="order.lastName"
+              id="input"
+              @input="validateName('lastName')"
+            />
+            <span v-if="!validations.lastNameValid" class="error">
+              Last Name must contain only letters.
+            </span>
+          </p>
+          <p id="orderText">
+            <strong> Phone:</strong>
+            <input
+              v-model.trim="order.phone"
+              id="input"
+              @input="validatePhone"
+            />
+            <span v-if="!validations.phoneValid" class="error">
+              Phone must contain only numbers.
+            </span>
+          </p>
+          <div id="orderSummary">
+            <h2>Order Summary</h2>
+            <p>First Name: {{ order.firstName }}</p>
+            <p>Last Name: {{ order.lastName }}</p>
+            <p>Phone Number: {{ order.phone }}</p>
+            <p>Classes Booked:</p>
+            <div id="activities">
+              <div
+                v-for="(item, index) in cart"
+                :key="index"
+                id="checkingOutItem"
+              >
+                <strong>
+                  <p>{{ item.name }}</p>
+                </strong>
+                <img :src="item.image" id="activityImage" />
+                <p><strong>Location: </strong>{{ item.location }}</p>
+                <p><strong>Price: </strong>{{ item.price }} AED per month.</p>
+                <button v-on:click="removeItem(index)" id="removeBtn">
+                  Remove <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button :disabled="!formIsValid" @click="checkout">Checkout</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      let mountSite = new Vue({
+        el: "#App",
+        data: {
+          showProduct: true,
+          mountUpLogo: "images/logo.png",
+          title: "MOUNT UP - After School Club",
+          activities: activities,
+          cart: [],
+          sortField: "name",
+          sortOrder: "ascending",
+          order: {
+            firstName: "",
+            lastName: "",
+            phone: "",
+          },
+          validations: {
+            firstNameValid: true,
+            lastNameValid: true,
+            phoneValid: true,
+          },
+        },
+        created() {
+          this.fetchActivities(); // Fetch initial activities data
+          this.startVacancyUpdate();
+        },
+        computed: {
+          formIsValid() {
+            return (
+              this.validations.firstNameValid &&
+              this.validations.lastNameValid &&
+              this.validations.phoneValid &&
+              this.order.firstName &&
+              this.order.lastName &&
+              this.order.phone
+            );
+          },
+          cartItemCount: function () {
+            return this.cart.length || "";
+          },
+          sortedActivities() {
+            const activitiesArray = this.activities.slice();
+
+            activitiesArray.sort((a, b) => {
+              let comparison = 0;
+
+              if (this.sortField === "name") {
+                comparison = a.name.localeCompare(b.name);
+              } else if (this.sortField === "location") {
+                comparison = a.location.localeCompare(b.location);
+              } else if (this.sortField === "price") {
+                comparison = a.price - b.price;
+              } else if (this.sortField === "vacancy") {
+                const remainingVacancyA = a.vacancy - this.cartCount(a.id);
+                const remainingVacancyB = b.vacancy - this.cartCount(b.id);
+                comparison = remainingVacancyA - remainingVacancyB;
+              }
+
+              return this.sortOrder === "ascending" ? comparison : -comparison;
+            });
+
+            return activitiesArray;
+          },
+          canCheckout() {
+            return this.cart.length > 0;
+          },
+          canAddToCart() {
+            return (activity) => {
+              return activity.vacancy - this.cartCount(activity._id) > 0;
+            };
+          },
+        },
+        methods: {
+          validateName(field) {
+            const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
+            this.validations[`${field}Valid`] = nameRegex.test(
+              this.order[field]
+            );
+          },
+          validatePhone() {
+            const phoneRegex = /^[0-9]+$/; // Only numbers
+            this.validations.phoneValid = phoneRegex.test(this.order.phone);
+          },
+          showCheckout() {
+            this.showProduct = this.showProduct ? false : true;
+          },
+          cartCount(id) {
+            let count = 0;
+            for (let item of this.cart) {
+              if (item._id === id) {
+                count++;
+              }
+            }
+            return count;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
