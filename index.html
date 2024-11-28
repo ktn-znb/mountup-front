@@ -259,7 +259,7 @@
           },
           canAddToCart() {
             return (activity) => {
-              return activity.vacancy - this.cartCount(activity._id) > 0;
+              return activity.vacancy > 0;
             };
           },
         },
