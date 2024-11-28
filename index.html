@@ -264,6 +264,14 @@
           },
         },
         methods: {
+          fetchActivities() {
+            fetch("http://localhost:3000/collection/activities")
+              .then((response) => response.json())
+              .then((data) => {
+                this.activities = data;
+              })
+              .catch((error) => console.error("Error fetching data:", error));
+          },
           validateName(field) {
             const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
             this.validations[`${field}Valid`] = nameRegex.test(
