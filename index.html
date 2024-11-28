@@ -277,6 +277,17 @@
               this.fetchActivities();
             }, 100);
           },
+          checkout() {
+            const orderData = {
+                items: this.cart.map((item) => ({
+                  _id: item._id,
+                  name: item.name,
+                })),
+                firstName: this.order.firstName,
+                lastName: this.order.lastName,
+                phone: this.order.phone,
+              };
+          },
           validateName(field) {
             const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
             this.validations[`${field}Valid`] = nameRegex.test(
