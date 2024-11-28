@@ -347,7 +347,30 @@
             const activityToUpdate = this.activities.find(
               (activity) => activity._id === item._id
             );
+            if (activityToUpdate) {
+              const updatedVacancy = activityToUpdate.vacancy + 1;
 
+              // Send a PUT request to update the vacancy
+              fetch(`http://localhost:3000/collection/activities/${item._id}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ vacancy: updatedVacancy }),
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    activityToUpdate.vacancy = updatedVacancy;
+                  } else {
+                    console.error(
+                      `Failed to update vacancy for activity: ${activityToUpdate.name}`
+                    );
+                  }
+                })
+                .catch((error) =>
+                  console.error("Error updating vacancy:", error)
+                );
+            }
             if (this.cart.length === 0) {
               this.showProduct = true;
             }
