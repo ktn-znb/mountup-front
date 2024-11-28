@@ -279,38 +279,43 @@
           },
           checkout() {
             if (this.formIsValid) {
-                const orderData = {
-                  items: this.cart.map((item) => ({
-                    _id: item._id,
-                    name: item.name,
-                  })),
-                  firstName: this.order.firstName,
-                  lastName: this.order.lastName,
-                  phone: this.order.phone,
-                };
-  
-                // Place the order
-                fetch("http://localhost:3000/collection/orders", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(orderData),
+              const orderData = {
+                items: this.cart.map((item) => ({
+                  _id: item._id,
+                  name: item.name,
+                })),
+                firstName: this.order.firstName,
+                lastName: this.order.lastName,
+                phone: this.order.phone,
+              };
+
+              // Place the order
+              fetch("http://localhost:3000/collection/orders", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(orderData),
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    alert("Order placed successfully!");
+                    // Reset the cart and order data
+                    this.cart = [];
+                    this.order = { firstName: "", lastName: "", phone: "" };
+                  } else {
+                    alert("Failed to place the order.");
+                  }
                 })
-                  .then((response) => {
-                    if (response.ok) {
-                      alert("Order placed successfully!");
-                      // Reset the cart and order data
-                      this.cart = [];
-                      this.order = { firstName: "", lastName: "", phone: "" };
-                    } else {
-                      alert("Failed to place the order.");
-                    }
-                  })
-                  .catch((error) => console.error("Error:", error));
-              } else {
-                alert("Please fix the errors before proceeding.");
-              }
+                .catch((error) => console.error("Error:", error));
+            } else {
+              alert("Please fix the errors before proceeding.");
+            }
+          },
+          addToCart(activity) {
+            this.cart.push(activity);
+            const updatedVacancy = activity.vacancy - 1;
+            
           },
           validateName(field) {
             const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
