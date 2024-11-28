@@ -198,7 +198,7 @@
           showProduct: true,
           mountUpLogo: "images/logo.png",
           title: "MOUNT UP - After School Club",
-          activities: activities,
+          activities: [],
           cart: [],
           sortField: "name",
           sortOrder: "ascending",
@@ -312,6 +312,16 @@
               alert("Please fix the errors before proceeding.");
             }
           },
+          validateName(field) {
+            const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
+            this.validations[`${field}Valid`] = nameRegex.test(
+              this.order[field]
+            );
+          },
+          validatePhone() {
+            const phoneRegex = /^[0-9]+$/; // Only numbers
+            this.validations.phoneValid = phoneRegex.test(this.order.phone);
+          },
           addToCart(activity) {
             this.cart.push(activity);
             const updatedVacancy = activity.vacancy - 1;
@@ -339,6 +349,18 @@
                 console.error("Error updating vacancy:", error)
               );
           },
+          showCheckout() {
+            this.showProduct = this.showProduct ? false : true;
+          },
+          cartCount(id) {
+            let count = 0;
+            for (let item of this.cart) {
+              if (item._id === id) {
+                count++;
+              }
+            }
+            return count;
+          },
           removeItem(index) {
             const item = this.cart[index];
 
@@ -347,6 +369,7 @@
             const activityToUpdate = this.activities.find(
               (activity) => activity._id === item._id
             );
+
             if (activityToUpdate) {
               const updatedVacancy = activityToUpdate.vacancy + 1;
 
@@ -374,28 +397,6 @@
             if (this.cart.length === 0) {
               this.showProduct = true;
             }
-          },
-          validateName(field) {
-            const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
-            this.validations[`${field}Valid`] = nameRegex.test(
-              this.order[field]
-            );
-          },
-          validatePhone() {
-            const phoneRegex = /^[0-9]+$/; // Only numbers
-            this.validations.phoneValid = phoneRegex.test(this.order.phone);
-          },
-          showCheckout() {
-            this.showProduct = this.showProduct ? false : true;
-          },
-          cartCount(id) {
-            let count = 0;
-            for (let item of this.cart) {
-              if (item._id === id) {
-                count++;
-              }
-            }
-            return count;
           },
         },
       });
