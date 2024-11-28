@@ -272,6 +272,11 @@
               })
               .catch((error) => console.error("Error fetching data:", error));
           },
+          startVacancyUpdate() {
+            setInterval(() => {
+              this.fetchActivities();
+            }, 100);
+          },
           validateName(field) {
             const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
             this.validations[`${field}Valid`] = nameRegex.test(
