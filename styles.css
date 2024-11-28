@@ -1,0 +1,187 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+body {
+    background-color: #fff0c2;
+    font-family: "Poppins", sans-serif;
+    color: #25424c;
+    overflow-y: hidden;
+    pointer-events: auto; 
+  }
+
+#mountUpLogo{
+    height: 70px;
+    width: 70px;
+    margin: 10px;
+}
+
+#header {
+    position: fixed;
+    font-size: 28px;
+    margin: 0;
+    display: flex;
+    height: 100%;
+}
+
+#main {
+    display: flex;
+}
+
+#sidebar{
+    border-top: 2px solid #25424c; 
+    padding: 10px;
+    background-color: #80c7ac;
+    height: calc(100vh - 70px);
+    top: 90px;
+    width: 18vh;
+    position: fixed;
+}
+
+#content{
+    padding: 10px;
+    position: relative;
+    border-top: 2px solid #25424c; 
+    margin-left: 20vh;
+    margin-top: 90px;    
+    height: calc(100vh - 100px)  ;
+    width: calc(100% - 20vh);
+    overflow-y: auto;
+    background-color: #f5bea5;
+}
+
+#flex1{
+    display: flex;
+}
+
+#checkoutBtn{
+    margin-left: 130vh;
+    font-size: 20px;
+}
+#backToShopBtn{
+    margin-left: 150vh;
+    font-size: 20px;
+}
+.activity {
+    height: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 300px;
+    border-radius: 20px;
+    background-color: beige;
+    transition: transform 0.2s ease-in-out;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+ }
+
+.activity:hover {
+    transform: scale(1.01);
+}
+
+
+#activityImage {
+    width: 300px;
+    object-fit: cover;
+    height: 250px;
+    border-radius: 20px;
+}
+
+#italic {
+    font-style: italic;
+}
+
+button {
+    height: auto;
+    width: auto;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #25424c;
+    color: beige;
+    font-weight: bold;
+    font-family: "Poppins", sans-serif;
+    border: 0px;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+#addToCartBtn {
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+#checkoutPage{
+    padding: 10px;
+    position: relative;
+    border-top: 2px solid #25424c; 
+    margin-top: 90px;    
+    height: calc(100vh - 100px)  ;
+    width: 100%;
+    overflow-y: auto;
+    background-color: #f5bea5;
+}
+
+#activities {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+#sidebar{
+    display: flex;
+    flex-direction: column;
+}
+
+label{
+ font-size: 20px;
+}
+#orderText {
+    margin: 10px;
+    padding: 5px;
+    font-size: 20px;
+    border: 2px solid #25424c;  
+    border-radius: 5px;
+    width: 60vh; 
+}
+#input {            
+    padding: 5px;
+    background-color: #f5bea5;
+    font-size: 20px;    
+    border: 0px; 
+}
+
+#orderSummary{
+    margin-left: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #25424c;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+#checkingOutItem {
+    border-radius: 10px;
+    padding: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 300px;
+    height: auto;
+    background-color: #fff0c2;
+}
+
+#removeBtn {
+    width: 300px;
+}
+
+#search{
+    border-radius: 10px;
+    width: 15vh;
+    height: 20px;
+    padding: 3px;
+    border: 2px solid #80c7ac;  
+    margin-top: 10px;
+
+}
