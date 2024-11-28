@@ -315,7 +315,29 @@
           addToCart(activity) {
             this.cart.push(activity);
             const updatedVacancy = activity.vacancy - 1;
-            
+
+            fetch(
+              `http://localhost:3000/collection/activities/${activity._id}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ vacancy: updatedVacancy }),
+              }
+            )
+              .then((response) => {
+                if (response.ok) {
+                  activity.vacancy = updatedVacancy;
+                } else {
+                  console.error(
+                    `Failed to update vacancy for activity: ${activity.name}`
+                  );
+                }
+              })
+              .catch((error) =>
+                console.error("Error updating vacancy:", error)
+              );
           },
           validateName(field) {
             const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
