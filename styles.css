@@ -77,6 +77,13 @@ body {
     flex-direction: column;
  }
 
+.search_input{
+    border-radius: 10px;
+    border: none;
+    padding: 5px;
+    font-size: 20px;
+}
+
 .activity:hover {
     transform: scale(1.01);
 }
