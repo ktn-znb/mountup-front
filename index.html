@@ -204,6 +204,7 @@
           mountUpLogo: "images/logo.png",
           title: "MOUNT UP - After School Club",
           searchQuery: "",
+          searchResults: [],
           activities: [],
           cart: [],
           sortField: "name",
@@ -278,16 +279,14 @@
               .then((response) => {
                 if (!response.ok) {
                   return response.json().then((error) => {
-                    throw new Error(
-                      error.error || "Error."
-                    );
+                    throw new Error(error.error || "Error.");
                   });
                 }
                 return response.json();
               })
               .then((data) => {
-                console.log("Results ", data);
-                activities = data;
+                console.log("Results", data);
+                this.searchResults = data; // Update search results
               })
               .catch((error) => {
                 console.error(error);
