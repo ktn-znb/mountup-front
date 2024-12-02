@@ -11,7 +11,6 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
-    <script src="activities.js"></script>
     <script
       src="https://kit.fontawesome.com/5aaf1e8901.js"
       crossorigin="anonymous"
@@ -81,7 +80,13 @@
             />
             Descending
           </label>
-          <h2>Search</h2>
+          <h1>Search</h1>
+          <input
+            type="text"
+            class="search_input"
+            @input="fetchSearchResults"
+            v-model="searchQuery"
+          />
         </div>
         <div id="content" v-if="showProduct">
           <div id="flex1">
@@ -198,6 +203,7 @@
           showProduct: true,
           mountUpLogo: "images/logo.png",
           title: "MOUNT UP - After School Club",
+          searchQuery: "",
           activities: [],
           cart: [],
           sortField: "name",
@@ -215,7 +221,6 @@
         },
         created() {
           this.fetchActivities(); // Fetch initial activities data
-          this.startVacancyUpdate();
         },
         computed: {
           formIsValid() {
@@ -264,6 +269,31 @@
           },
         },
         methods: {
+          fetchSearchResults() {
+            fetch(
+              `http://localhost:3000/collection/activities/search?q=${encodeURIComponent(
+                this.searchQuery
+              )}`
+            )
+              .then((response) => {
+                if (!response.ok) {
+                  return response.json().then((error) => {
+                    throw new Error(
+                      error.error || "Error."
+                    );
+                  });
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log("Results ", data);
+                activities = data;
+              })
+              .catch((error) => {
+                console.error(error);
+                this.errorMessage = error.message;
+              });
+          },
           fetchActivities() {
             fetch("http://localhost:3000/collection/activities")
               .then((response) => response.json())
@@ -339,6 +369,7 @@
               .then((response) => {
                 if (response.ok) {
                   activity.vacancy = updatedVacancy;
+                  this.startVacancyUpdate();
                 } else {
                   console.error(
                     `Failed to update vacancy for activity: ${activity.name}`
