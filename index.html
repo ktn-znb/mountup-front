@@ -107,15 +107,12 @@
               :key="activity._id"
             >
               <h2 v-text="activity.name"></h2>
-              <img v-bind:src="activity.image" id="activityImage" />
+              <img :src="baseURL + '/' + activity.image" id="activityImage" />
               <strong>Description: </strong>
               <span v-text="activity.description" id="italic"></span>
               <p><strong>Location: </strong>{{activity.location}}</p>
               <p><strong>Price: </strong>{{activity.price}} AED per month.</p>
-              <p>
-                <!-- now instead of this change it using put ok? -->
-                <strong>Spots Left: </strong>{{activity.vacancy}}
-              </p>
+              <p><strong>Spots Left: </strong>{{activity.vacancy}}</p>
               <div>
                 <span v-for="n in activity.rating">★</span>
                 <span v-for="n in 5-activity.rating">☆</span>
@@ -200,6 +197,7 @@
       let mountSite = new Vue({
         el: "#App",
         data: {
+          baseURL: "http://localhost:3000",
           showProduct: true,
           mountUpLogo: "images/logo.png",
           title: "MOUNT UP - After School Club",
