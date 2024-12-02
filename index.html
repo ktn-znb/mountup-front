@@ -224,6 +224,11 @@
           this.fetchActivities(); // Fetch initial activities data
         },
         computed: {
+          displayedActivities() {
+            return this.searchQuery
+              ? this.searchResults
+              : this.sortedActivities;
+          },
           formIsValid() {
             return (
               this.validations.firstNameValid &&
