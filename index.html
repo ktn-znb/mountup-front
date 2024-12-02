@@ -180,7 +180,7 @@
                 <strong>
                   <p>{{ item.name }}</p>
                 </strong>
-                <img :src="item.image" id="activityImage" />
+                <img :src="baseURL + '/' + item.image" id="activityImage" />
                 <p><strong>Location: </strong>{{ item.location }}</p>
                 <p><strong>Price: </strong>{{ item.price }} AED per month.</p>
                 <button v-on:click="removeItem(index)" id="removeBtn">
