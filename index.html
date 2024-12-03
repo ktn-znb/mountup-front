@@ -107,7 +107,7 @@
               :key="activity._id"
             >
               <h2 v-text="activity.name"></h2>
-              <img :src="baseURL + '/' + activity.image" id="activityImage" />
+              <img :src="activity.image" id="activityImage" />
               <strong>Description: </strong>
               <span v-text="activity.description" id="italic"></span>
               <p><strong>Location: </strong>{{activity.location}}</p>
@@ -180,7 +180,7 @@
                 <strong>
                   <p>{{ item.name }}</p>
                 </strong>
-                <img :src="baseURL + '/' + item.image" id="activityImage" />
+                <img :src="item.image" id="activityImage" />
                 <p><strong>Location: </strong>{{ item.location }}</p>
                 <p><strong>Price: </strong>{{ item.price }} AED per month.</p>
                 <button v-on:click="removeItem(index)" id="removeBtn">
@@ -197,7 +197,6 @@
       let mountSite = new Vue({
         el: "#App",
         data: {
-          baseURL: "http://localhost:3000",
           showProduct: true,
           mountUpLogo: "images/logo.png",
           title: "MOUNT UP - After School Club",
