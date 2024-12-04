@@ -218,7 +218,7 @@
           },
         },
         created() {
-          this.fetchActivities(); // Fetch initial activities data
+          this.fetchActivities();
         },
         computed: {
           displayedActivities() {
@@ -303,11 +303,7 @@
               })
               .catch((error) => console.error("Error fetching data:", error));
           },
-          startVacancyUpdate() {
-            setInterval(() => {
-              this.fetchActivities();
-            }, 100);
-          },
+
           checkout() {
             if (this.formIsValid) {
               const orderData = {
@@ -370,10 +366,10 @@
               .then((response) => {
                 if (response.ok) {
                   activity.vacancy = updatedVacancy;
-                  this.startVacancyUpdate();
+                  this.fetchActivities();
                 } else {
                   console.error(
-                    `Failed to update vacancy for activity: ${activity.name}`
+                    `Failed to fetching activities again`
                   );
                 }
               })
