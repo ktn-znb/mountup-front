@@ -17,12 +17,15 @@
     ></script>
   </head>
   <body>
+    <!-- Vue mount point  -->
     <div id="App">
+      <!-- The header which includes the logo and title -->
       <div id="header">
         <img v-bind:src="mountUpLogo" id="mountUpLogo" />
         <h1 v-text="title"></h1>
       </div>
       <div id="main">
+        <!-- This is the sidebar that has the sorting and search bar -->
         <div id="sidebar" v-if="showProduct">
           <h1>Sort By</h1>
           <label>
@@ -88,6 +91,7 @@
             v-model="searchQuery"
           />
         </div>
+        <!-- This is the content/main page where all the activities will be displayed -->
         <div id="content" v-if="showProduct">
           <div id="flex1">
             <h1>Actvities</h1>
@@ -127,6 +131,7 @@
             </div>
           </div>
         </div>
+        <!-- This is the checkout page  -->
         <div v-else id="checkoutPage">
           <div id="flex1">
             <h1>Checkout</h1>
@@ -217,15 +222,18 @@
             phoneValid: true,
           },
         },
+        // the created hook which is executed as the vue instance is initialized
         created() {
           this.fetchActivities();
         },
         computed: {
+          // this function toggles between the searchResults array and sortedActivities array when there is any input in the search bar
           displayedActivities() {
             return this.searchQuery
               ? this.searchResults
               : this.sortedActivities;
           },
+          // this function summarizes the form validations
           formIsValid() {
             return (
               this.validations.firstNameValid &&
@@ -236,9 +244,11 @@
               this.order.phone
             );
           },
+          // returns cart length
           cartItemCount: function () {
             return this.cart.length || "";
           },
+          // sorts the activites
           sortedActivities() {
             const activitiesArray = this.activities.slice();
 
@@ -262,9 +272,11 @@
 
             return activitiesArray;
           },
+          // allows check out button to show when there is something added in the cart
           canCheckout() {
             return this.cart.length > 0;
           },
+          // allows add to cart button to show only if there is vacancy left 
           canAddToCart() {
             return (activity) => {
               return activity.vacancy > 0;
@@ -272,6 +284,7 @@
           },
         },
         methods: {
+          // perform a search operation by communicating with a backend API
           fetchSearchResults() {
             fetch(
               `http://localhost:3000/collection/activities/search?q=${encodeURIComponent(
@@ -288,13 +301,14 @@
               })
               .then((data) => {
                 console.log("Results", data);
-                this.searchResults = data; // Update search results
+                this.searchResults = data; 
               })
               .catch((error) => {
                 console.error(error);
                 this.errorMessage = error.message;
               });
           },
+          // retrieve a collection of activities from a backend API endpoint 
           fetchActivities() {
             fetch("http://localhost:3000/collection/activities")
               .then((response) => response.json())
@@ -303,7 +317,7 @@
               })
               .catch((error) => console.error("Error fetching data:", error));
           },
-
+          // Send the orders and form the order data
           checkout() {
             if (this.formIsValid) {
               const orderData = {
@@ -315,8 +329,6 @@
                 lastName: this.order.lastName,
                 phone: this.order.phone,
               };
-
-              // Place the order
               fetch("http://localhost:3000/collection/orders", {
                 method: "POST",
                 headers: {
@@ -327,7 +339,6 @@
                 .then((response) => {
                   if (response.ok) {
                     alert("Order placed successfully!");
-                    // Reset the cart and order data
                     this.cart = [];
                     this.order = { firstName: "", lastName: "", phone: "" };
                   } else {
@@ -339,16 +350,19 @@
               alert("Please fix the errors before proceeding.");
             }
           },
+          // For validating name that it only has letters
           validateName(field) {
-            const nameRegex = /^[a-zA-Z\s]+$/; // Only letters and spaces
+            const nameRegex = /^[a-zA-Z\s]+$/; 
             this.validations[`${field}Valid`] = nameRegex.test(
               this.order[field]
             );
           },
+          // For validating the number only has numbers
           validatePhone() {
-            const phoneRegex = /^[0-9]+$/; // Only numbers
+            const phoneRegex = /^[0-9]+$/; 
             this.validations.phoneValid = phoneRegex.test(this.order.phone);
           },
+          // Add to cart and then also calls the fetch PUT to update vacancy
           addToCart(activity) {
             this.cart.push(activity);
             const updatedVacancy = activity.vacancy - 1;
@@ -377,9 +391,11 @@
                 console.error("Error updating vacancy:", error)
               );
           },
+          // toggle to show checkout page or the main page 
           showCheckout() {
             this.showProduct = this.showProduct ? false : true;
           },
+          // Returns cart count
           cartCount(id) {
             let count = 0;
             for (let item of this.cart) {
@@ -389,6 +405,7 @@
             }
             return count;
           },
+          // Splices the cart array and then also does PUT
           removeItem(index) {
             const item = this.cart[index];
 
