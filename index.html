@@ -202,6 +202,7 @@
       let mountSite = new Vue({
         el: "#App",
         data: {
+          API_BASE: "http://localhost:3000",
           showProduct: true,
           mountUpLogo: "images/logo.png",
           title: "MOUNT UP - After School Club",
@@ -276,7 +277,7 @@
           canCheckout() {
             return this.cart.length > 0;
           },
-          // allows add to cart button to show only if there is vacancy left 
+          // allows add to cart button to show only if there is vacancy left
           canAddToCart() {
             return (activity) => {
               return activity.vacancy > 0;
@@ -287,7 +288,9 @@
           // perform a search operation by communicating with a backend API
           fetchSearchResults() {
             fetch(
-              `http://localhost:3000/collection/activities/search?q=${encodeURIComponent(
+              `${
+                this.API_BASE
+              }/collection/activities/search?q=${encodeURIComponent(
                 this.searchQuery
               )}`
             )
@@ -301,16 +304,16 @@
               })
               .then((data) => {
                 console.log("Results", data);
-                this.searchResults = data; 
+                this.searchResults = data;
               })
               .catch((error) => {
                 console.error(error);
                 this.errorMessage = error.message;
               });
           },
-          // retrieve a collection of activities from a backend API endpoint 
+          // retrieve a collection of activities from a backend API endpoint
           fetchActivities() {
-            fetch("http://localhost:3000/collection/activities")
+            fetch(`${this.API_BASE}/collection/activities`)
               .then((response) => response.json())
               .then((data) => {
                 this.activities = data;
@@ -329,7 +332,7 @@
                 lastName: this.order.lastName,
                 phone: this.order.phone,
               };
-              fetch("http://localhost:3000/collection/orders", {
+              fetch(`${this.API_BASE}/collection/orders`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -352,14 +355,14 @@
           },
           // For validating name that it only has letters
           validateName(field) {
-            const nameRegex = /^[a-zA-Z\s]+$/; 
+            const nameRegex = /^[a-zA-Z\s]+$/;
             this.validations[`${field}Valid`] = nameRegex.test(
               this.order[field]
             );
           },
           // For validating the number only has numbers
           validatePhone() {
-            const phoneRegex = /^[0-9]+$/; 
+            const phoneRegex = /^[0-9]+$/;
             this.validations.phoneValid = phoneRegex.test(this.order.phone);
           },
           // Add to cart and then also calls the fetch PUT to update vacancy
@@ -367,31 +370,26 @@
             this.cart.push(activity);
             const updatedVacancy = activity.vacancy - 1;
 
-            fetch(
-              `http://localhost:3000/collection/activities/${activity._id}`,
-              {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ vacancy: updatedVacancy }),
-              }
-            )
+            fetch(`${this.API_BASE}/collection/activities/${activity._id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ vacancy: updatedVacancy }),
+            })
               .then((response) => {
                 if (response.ok) {
                   activity.vacancy = updatedVacancy;
                   this.fetchActivities();
                 } else {
-                  console.error(
-                    `Failed to fetching activities again`
-                  );
+                  console.error(`Failed to fetching activities again`);
                 }
               })
               .catch((error) =>
                 console.error("Error updating vacancy:", error)
               );
           },
-          // toggle to show checkout page or the main page 
+          // toggle to show checkout page or the main page
           showCheckout() {
             this.showProduct = this.showProduct ? false : true;
           },
@@ -419,7 +417,7 @@
               const updatedVacancy = activityToUpdate.vacancy + 1;
 
               // Send a PUT request to update the vacancy
-              fetch(`http://localhost:3000/collection/activities/${item._id}`, {
+              fetch(`${this.API_BASE}/collection/activities/${item._id}`, {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
