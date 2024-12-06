@@ -367,7 +367,7 @@
           },
           // Add to cart and then also calls the fetch PUT to update vacancy
           addToCart(activity) {
-            this.cart.push(activity);
+           6
             const updatedVacancy = activity.vacancy - 1;
 
             fetch(`${this.API_BASE}/collection/activities/${activity._id}`, {
