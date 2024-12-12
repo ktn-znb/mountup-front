@@ -263,9 +263,7 @@
               } else if (this.sortField === "price") {
                 comparison = a.price - b.price;
               } else if (this.sortField === "vacancy") {
-                const remainingVacancyA = a.vacancy - this.cartCount(a.id);
-                const remainingVacancyB = b.vacancy - this.cartCount(b.id);
-                comparison = remainingVacancyA - remainingVacancyB;
+                comparison = a.vacancy - b.vacancy;
               }
 
               return this.sortOrder === "ascending" ? comparison : -comparison;
